@@ -23,39 +23,46 @@ import java.util.Map;
  * @since v1.0
  */
 @Service
-public class ApplyManage extends  BaseManage<Long> {
+public class ApplyManage extends BaseManage<Long> {
     @Autowired
-    private ApplyService<Apply,ApplyExample,Long> applyService;
+    private ApplyService<Apply, ApplyExample, Long> applyService;
+
     @Override
-    public ApplyService<Apply,ApplyExample,Long> getService() {
+    public ApplyService<Apply, ApplyExample, Long> getService() {
         return applyService;
     }
 
     /**
      * 删除
+     *
      * @param id
      * @return
      */
     public int deleteApply(Long id) {
-        return  removeById(id);
+        return removeById(id);
     }
 
     /**
      * 查询全部
+     *
      * @return
      */
     public List<Apply> getAll() {
-        return findAll();
+        ApplyExample applyExample=new ApplyExample();
+        applyExample.setOrderByClause("id desc");
+        return findListBy(applyExample);
     }
+
     /**
      * id查询
      */
     public Apply getApply(Long id) {
-        return  getService().findByID(id);
+        return getService().findByID(id);
     }
 
     /**
      * 分页查询
+     *
      * @param itemName
      * @param start
      * @param length
@@ -65,17 +72,17 @@ public class ApplyManage extends  BaseManage<Long> {
         //初始化参数
         if (start == null) start = 0;
         if (length == null) length = 10;
-        ApplyExample applyExample=new ApplyExample();
-        ApplyExample.Criteria criteria=applyExample.createCriteria();
-        if(StringUtils.isNotBlank(itemName))
+        ApplyExample applyExample = new ApplyExample();
+        ApplyExample.Criteria criteria = applyExample.createCriteria();
+        if (StringUtils.isNotBlank(itemName))
             criteria.andItemNameEqualTo(EsapiUtil.sql(itemName));
-        List<Apply> applies=getService().findBy(new RowBounds(start,length),applyExample);
+        List<Apply> applies = getService().findBy(new RowBounds(start, length), applyExample);
         //查询统计个数
         String sql = "select count(*) count from apply where 1=1 ";
-        if(StringUtils.isNotBlank(itemName))
-            sql+=" and item_name = '"+itemName+"'";
-        int count=getService().countBySQL(sql);
-        Map map=new HashMap();
+        if (StringUtils.isNotBlank(itemName))
+            sql += " and item_name = '" + itemName + "'";
+        int count = getService().countBySQL(sql);
+        Map map = new HashMap();
         map.put("list", applies);
         map.put("count", count);
         return map;
@@ -83,12 +90,13 @@ public class ApplyManage extends  BaseManage<Long> {
 
     /**
      * 手机号查询
+     *
      * @param phone
      * @return
      */
     public List<Apply> getByPhone(String phone) {
-        ApplyExample applyExample=new ApplyExample();
-        ApplyExample.Criteria criteria=applyExample.createCriteria();
+        ApplyExample applyExample = new ApplyExample();
+        ApplyExample.Criteria criteria = applyExample.createCriteria();
         criteria.andPhoneEqualTo(EsapiUtil.sql(phone));
         return findListBy(applyExample);
 
@@ -96,11 +104,12 @@ public class ApplyManage extends  BaseManage<Long> {
 
     /**
      * 保存
+     *
      * @param apply
      * @return
      */
     public int saveApply(org.garen.tourist.swagger.model.Apply apply) {
-        Apply apply1=tranfer(apply);
+        Apply apply1 = tranfer(apply);
         // TODO 用户码应该是从后台获取
         apply1.setUserCode("USER-15087800456568cb435b1526118");
         return create(apply1);
@@ -108,11 +117,12 @@ public class ApplyManage extends  BaseManage<Long> {
 
     /**
      * 修改
+     *
      * @param apply
      * @return
      */
-    public int updateApply(Long id,org.garen.tourist.swagger.model.Apply apply) {
-        Apply apply1=tranfer(apply);
+    public int updateApply(Long id, org.garen.tourist.swagger.model.Apply apply) {
+        Apply apply1 = tranfer(apply);
         apply1.setId(id);
         return modify(apply1);
     }

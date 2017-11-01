@@ -29,8 +29,8 @@ public class ApplyValid {
             return "手机号只能是11位数字";
         if(StringUtils.isBlank(apply.getSex()))
             return "性别为空";
-        if(!apply.getSex().matches("^[F|M]$"))
-            return "性别只能是F或者M";
+        if(!apply.getSex().equals("男")&&!apply.getSex().equals("女"))
+            return "性别只能是男或者女";
         return null;
     }
 
